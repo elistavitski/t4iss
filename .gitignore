@@ -99,3 +99,18 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+
+
+
+
+
+
+
+
+
+.directory
+.ipynb_checkpoints
+.gitignore
+
