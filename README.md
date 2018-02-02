@@ -60,10 +60,10 @@ TODOs:
 
 
 ## module-2
-will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com){:target="_blank"}
+will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com)
 
 ## module-3
-will be for implementing XASMatcher [https://arxiv.org/abs/1711.02227](https://arxiv.org/abs/1711.02227){:target="_blank"}
+will be for implementing XASMatcher [https://arxiv.org/abs/1711.02227](https://arxiv.org/abs/1711.02227)
 
 
 
