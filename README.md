@@ -1,10 +1,11 @@
 # t4iss
 Implementation of some theoretical methods for ISS at NSLS-II.
 
+    # Assuming you have python 3.6+ environment through anaconda 
     $ conda install --channel matsci pymatgen
     $ conda install -c omnia pybtex 
-    $ cd data; unzip data.zip; cd ..
-    $ jupyter notebook --no-browser &
+    $ cd data; unzip XANES.zip; cd ..
+    $ jupyter notebook &
 
 ## module-1
 This module gets structure from Materials Project based on mpid and generates 
