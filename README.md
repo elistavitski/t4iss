@@ -30,13 +30,13 @@ will generate this plot for Ti-K edge of SrTiO3 (mp-5229):
 
 ![](img/mp-5229_Ti.png)
 
-If you want O-K edge, change Ti as O
+If you want O-K edge, change Ti as O:
 
 ```python
 get_XANES(mpr,mpid='mp-5229',absorbing_atom='O',export_figure=True)
 ```
 
-You can do alse search in MP database like this:
+You can also search in MP database like this:
     
 ```python
 # search in MP
@@ -47,8 +47,17 @@ for s in mpid_list[0:5]:
     get_XANES(mpr,mpid=s,absorbing_atom='Ti')
 ```
 
-This will search for string "Li-Ti-O" in MP and retrive ids of structures less than 20 atoms in unit-cell.
-First 5 structure will be plotted. Change accordingly....
+This will search for string "Li-Ti-O" in MP and retrive ids of structures 
+less than 20 atoms in unit-cell. First 5 structures will be plotted. * is
+also supported. For example, "*-Ti-O" will find 816 structures. But don't
+try to plot them....
+
+TODOs:
+- [ ] Add support for Windows amd MacOS.
+- [ ] Better error tolerance.
+- [ ] Compare two structures with different mpid in same plot.
+- [ ] many more.....
+
 
 
 ## Author
