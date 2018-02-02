@@ -59,6 +59,14 @@ TODOs:
 - [ ] many more.....
 
 
+## module-2
+will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com){:target="_blank"}
+
+## module-3
+will be for implementing XASMatcher [https://arxiv.org/abs/1711.02227](https://arxiv.org/abs/1711.02227){:target="_blank"}
+
+
+
 
 ## Author
 * Mehmet Topsakal (mtopsakal@bnl.gov)
