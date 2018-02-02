@@ -22,6 +22,16 @@ This module gets structure from Materials Project based on mpid and generates
 a plot of coordination number around central atom and x-ray absorption spectrum
 for each non-equivalent atomic sites.
 
+```python
+get_XANES(mpr,mpid='mp-5229',absorbing_atom='Ti',export_figure=True)
+```
+
+will generate this plot
+
+![](img/mp-5229_Ti.png)
+
+
+
 
 
 ## Author
