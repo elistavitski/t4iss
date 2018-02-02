@@ -26,12 +26,29 @@ for each non-equivalent atomic sites.
 get_XANES(mpr,mpid='mp-5229',absorbing_atom='Ti',export_figure=True)
 ```
 
-will generate this plot
+will generate this plot for Ti-K edge of SrTiO3 (mp-5229):
 
 ![](img/mp-5229_Ti.png)
 
+If you want O-K edge, change Ti as O
 
+```python
+get_XANES(mpr,mpid='mp-5229',absorbing_atom='O',export_figure=True)
+```
 
+You can do alse search in MP database like this:
+    
+```python
+# search in MP
+mpid_list = search_MP(mpr,search_pattern='Li-Ti-O',nmax=20)
+
+# plot first 5
+for s in mpid_list[0:5]:
+    get_XANES(mpr,mpid=s,absorbing_atom='Ti')
+```
+
+This will search for string "Li-Ti-O" in MP and retrive ids of structures less than 20 atoms in unit-cell.
+First 5 structure will be plotted. Change accordingly....
 
 
 ## Author
