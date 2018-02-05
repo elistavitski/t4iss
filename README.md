@@ -52,10 +52,16 @@ less than 20 atoms in unit-cell. First 5 structures will be plotted. * is
 also supported. For example, "*-Ti-O" will find 816 structures. But don't
 try to plot them....
 
+compare_my_unknown function can be used to compare an unknown spectra with
+the ones in database. See below:
+    
+![](img/unknown.png)
+
+
 TODOs:
-- [ ] Add support for Windows amd MacOS.
-- [ ] Better error tolerance.
-- [ ] Compare two structures with different mpid in same plot.
+- [x] Add support for Windows and MacOS.
+- [ ] Better exception handling.
+- [ ] Improve documentation.
 - [ ] many more.....
 
 
@@ -65,7 +71,12 @@ will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.w
 ## module-3
 will be for implementing XASMatcher [https://arxiv.org/abs/1711.02227](https://arxiv.org/abs/1711.02227)
 
+## module-4
+will be on Machine Learning methods such as implementing this work:
+- Janis Timoshenko, Deyu Lu, Yuewei Lin, Anatoly I. Frenkel, [Supervised Machine-Learning-Based Determination of Three-Dimensional Structure of Metallic Nanoparticles](https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.7b02364), J. Phys. Chem. Lett., 2017, 8 (20), pp 5091–5098.
 
+## module-5
+will be on implementing OCEAN/EXCITING calculations.
 
 
 ## Author
