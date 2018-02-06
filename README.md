@@ -89,15 +89,26 @@ TODOs:
 ## module-2
 will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com)
 
+![](img/MCR-ALS_LTO.png)
+
 ## module-3
 will be for implementing XASMatcher [https://arxiv.org/abs/1711.02227](https://arxiv.org/abs/1711.02227)
+
+![](img/xasmatcher.png)
 
 ## module-4
 will be on Machine Learning methods such as implementing this work:
 - Janis Timoshenko, Deyu Lu, Yuewei Lin, Anatoly I. Frenkel, [Supervised Machine-Learning-Based Determination of Three-Dimensional Structure of Metallic Nanoparticles](https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.7b02364), J. Phys. Chem. Lett., 2017, 8 (20), pp 5091–5098.
 
+and/or
+
+![](img/ML-Ticoordination.png)
+
+
 ## module-5
 will be on implementing OCEAN/EXCITING calculations.
+
+![](img/feff_failure.png)
 
 
 ## Author
