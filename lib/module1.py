@@ -333,12 +333,11 @@ def compare_two(mpid1,mpid2,absorbing_atom,dbroot=None):
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def compare_my_unknown(fname,mpid,absorbing_atom,dbroot=None):
+def compare_my_unknown(fname,mpid,absorbing_atom,dbroot=None,xsrange=None,ysrange=None):
     
     here = os.getcwd()
     
-    os.chdir('unknowns')
-    
+    os.chdir('unknowns')    
     if not os.path.isfile(fname):
         print(fname+' is not found in unknowns folder.\n Please put it here as two-column text data.\n Exitting....')
         os.chdir(here)
@@ -395,12 +394,16 @@ def compare_my_unknown(fname,mpid,absorbing_atom,dbroot=None):
 
     try:
         os.chdir(here)
-        plot_XANES_with_unknown(spectra,mpid,unknown_spectra)
+        if xsrange is None:
+            xsrange=[-6.0,6.0]  
+        if ysrange is None:
+            ysrange=[-2.0,2.0]                          
+        plot_XANES_with_unknown(spectra,mpid,unknown_spectra,xsrange,ysrange)
     except:
         os.chdir(here)        
         print('Error: \n Unable to plot. Something is wrong...')
-
-
+    #os.chdir(here)
+    #plot_XANES_with_unknown(spectra,mpid,unknown_spectra,xsrange,ysrange)
     return 
 
 
@@ -685,10 +688,10 @@ def plot_XANES_two_together(spectra1,mpid1,spectra2,mpid2):
 
 
 
-def plot_XANES_with_unknown(sp,mpid,unknown_spectra):
+def plot_XANES_with_unknown(sp,mpid,unknown_spectra,xsrange,ysrange):
 
 
-    def pfunct(xshift):
+    def pfunct(xshift,yshift):
         fig = plt.figure(figsize=(9,7+len(sp)/4))    
         gs1 = gridspec.GridSpec(1, 2, width_ratios=[2,4] )
         gs1.update(top=0.90, bottom=0.1, left=0.07, right=0.97, wspace=0.15, hspace=0.05)
@@ -741,13 +744,13 @@ def plot_XANES_with_unknown(sp,mpid,unknown_spectra):
         if sp[0][1]:     
             ax=fig.add_subplot(gs2[1])
             minmaxs = []
-            yshift=0
+            ys=0
             for s,i in enumerate(sp):
                 multip = str(i[0])
                 xas_text = env0[0][0].specie.name+'-'+str(s+1)+'\n(x'+multip+')'
-                ax.plot(i[1].energy,yshift+i[1].intensity,'-')
-                ax.annotate(xas_text,(i[1].energy[-1],yshift+i[1].intensity[-1]), fontsize=8)
-                yshift = yshift + 0.5
+                ax.plot(i[1].energy,ys+i[1].intensity,'-')
+                ax.annotate(xas_text,(i[1].energy[-1],ys+i[1].intensity[-1]), fontsize=8)
+                ys = ys + 0.5
                 minmaxs.append([i[1].energy[0],i[1].energy[-1]])
             minmaxs = np.array(minmaxs)  
               
@@ -761,10 +764,10 @@ def plot_XANES_with_unknown(sp,mpid,unknown_spectra):
                 ts = ts + i_int
             ts = ts/ts[-1]
             if len(sp) > 1:
-                ax.plot(e_int,yshift+ts,'k-')
-                ax.annotate('total\n',(e_int[-1],yshift+ts[-1]), fontsize=8)
+                ax.plot(e_int,ys+ts,'k-')
+                ax.annotate('total\n',(e_int[-1],ys+ts[-1]), fontsize=8)
             
-            ax.plot(unknown_spectra[0]+xshift,yshift+1+unknown_spectra[1],'k-',lw=2,label='unknown')
+            ax.plot(unknown_spectra[0]+xshift,yshift+ys+1+unknown_spectra[1],'k-',lw=2,label='unknown')
             ax.set_yticks([]) 
             ax.grid(True)
             ax.set_xlabel('Energy (eV)')
@@ -786,19 +789,32 @@ def plot_XANES_with_unknown(sp,mpid,unknown_spectra):
     
     xs = widgets.FloatSlider(
         value=0,
-        min=-5.0,
-        max=5.0,
+        min=xsrange[0],
+        max=xsrange[1],
         step=0.05,
         description='x-shift in eV:',
         disabled=False,
         continuous_update=False,
         orientation='horizontal',
         readout=True,
-        readout_format='.1f', layout=layout)    
+        readout_format='.1f', layout=layout)   
+    
+    ys = widgets.FloatSlider(
+        value=0,
+        min=ysrange[0],
+        max=ysrange[1],
+        step=0.05,
+        description='y-shift in eV:',
+        disabled=False,
+        continuous_update=False,
+        orientation='horizontal',
+        readout=True,
+        readout_format='.1f', layout=layout)      
+    
     
     sp=sp
     mpid=mpid
-    y=interactive(pfunct, xshift=xs, layout=layout)
+    y=interactive(pfunct, xshift=xs, yshift=ys, layout=layout)
     display(y)  
     
     return
