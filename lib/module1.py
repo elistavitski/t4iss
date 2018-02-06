@@ -204,13 +204,120 @@ def get_XANES(mpr,mpid,absorbing_atom,run_feff=None,dbroot=None,plot=None,n_cpu=
     if plot:
         try:
             os.chdir(here)
-            plot_XANES(spectra,mpid)
+            plot_XANES(spectra,mpid,export_figure)
         except:
             print('Error: \n Unable to plot. Something is wrong...')
             os.chdir(here)
             return
                 
     os.chdir(here)
+    return 
+
+
+
+
+
+
+
+
+
+
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def compare_two(mpid1,mpid2,absorbing_atom,dbroot=None):
+    
+    here = os.getcwd()
+    
+    if dbroot is None:
+        dbroot = join(here,'data','XANES')
+        if not os.path.isdir(dbroot):
+            os.mkdir(dbroot)              
+    os.chdir(dbroot)  
+    
+    if not os.path.isdir(mpid1):
+        print('XANES for '+mpid1+' is NOT available in local database\n Try get_XANES function first \n Exitting....')
+        os.chdir(here)
+        return
+    if not os.path.isdir(mpid2):
+        print('XANES for '+mpid2+' is NOT available in local database\n Try get_XANES function first \n Exitting....')
+        os.chdir(here)
+        return    
+ 
+     
+    os.chdir(mpid1)   
+    structure = mg.Structure.from_file("CONTCAR")    
+    finder = SpacegroupAnalyzer(structure)
+    symmetrized_structure = finder.get_symmetrized_structure()
+    [sites, indices]  = symmetrized_structure.equivalent_sites, symmetrized_structure.equivalent_indices
+    spectra = []
+    for i,s in enumerate(sites):
+        if s[0].species_string is absorbing_atom:
+            f = 'feff_{:03d}_{}'.format(indices[i][0]+1,absorbing_atom)   
+            if os.path.isdir(f):
+                os.chdir(f)
+                if os.path.isfile('xanes.pkl'):
+                    xanes = pickle.load(open('xanes.pkl', 'rb'))
+                elif os.path.isfile('xmu.dat'):
+                    abs_specie = absorbing_atom
+                    x, y = np.loadtxt('xmu.dat', unpack=True, comments='#', usecols=(0,3), skiprows=0)
+                    xanes = XANES(x, y, structure, Element(abs_specie), 'K')
+                    pickle.dump(xanes, open('xanes.pkl', 'wb'))                
+                else: 
+                    xanes = []                
+                s_weight = len(indices[i])  
+                local_environment = symmetrized_structure.get_sites_in_sphere(symmetrized_structure[indices[i][0]].coords,10.1)
+                spectra.append([s_weight,xanes,local_environment])
+                os.chdir('..')                
+            else:
+                xanes = []
+                s_weight = len(indices[i])  
+                local_environment = symmetrized_structure.get_sites_in_sphere(symmetrized_structure[indices[i][0]].coords,10.1)
+                spectra.append([s_weight,xanes,local_environment]) 
+    os.chdir('..')
+    spectra1 = spectra
+
+    
+    os.chdir(mpid2)   
+    structure = mg.Structure.from_file("CONTCAR")    
+    finder = SpacegroupAnalyzer(structure)
+    symmetrized_structure = finder.get_symmetrized_structure()
+    [sites, indices]  = symmetrized_structure.equivalent_sites, symmetrized_structure.equivalent_indices
+    spectra = []
+    for i,s in enumerate(sites):
+        if s[0].species_string is absorbing_atom:
+            f = 'feff_{:03d}_{}'.format(indices[i][0]+1,absorbing_atom)   
+            if os.path.isdir(f):
+                os.chdir(f)
+                if os.path.isfile('xanes.pkl'):
+                    xanes = pickle.load(open('xanes.pkl', 'rb'))
+                elif os.path.isfile('xmu.dat'):
+                    abs_specie = absorbing_atom
+                    x, y = np.loadtxt('xmu.dat', unpack=True, comments='#', usecols=(0,3), skiprows=0)
+                    xanes = XANES(x, y, structure, Element(abs_specie), 'K')
+                    pickle.dump(xanes, open('xanes.pkl', 'wb'))                
+                else: 
+                    xanes = []                
+                s_weight = len(indices[i])  
+                local_environment = symmetrized_structure.get_sites_in_sphere(symmetrized_structure[indices[i][0]].coords,10.1)
+                spectra.append([s_weight,xanes,local_environment])
+                os.chdir('..')                
+            else:
+                xanes = []
+                s_weight = len(indices[i])  
+                local_environment = symmetrized_structure.get_sites_in_sphere(symmetrized_structure[indices[i][0]].coords,10.1)
+                spectra.append([s_weight,xanes,local_environment]) 
+    os.chdir('..')
+    spectra2 = spectra
+
+    try:
+        os.chdir(here)
+        plot_XANES_two_together(spectra1,mpid1,spectra2,mpid2)
+    except:
+        os.chdir(here)        
+        print('Error: \n Unable to plot. Something is wrong...')
+
     return 
 
 
@@ -286,15 +393,12 @@ def compare_my_unknown(fname,mpid,absorbing_atom,dbroot=None):
     
     unknown_spectra = [ux,uy]
 
-    #try:
-        #os.chdir(here)
-        #plot_XANES_with_unknown(spectra,mpid)
-    #except:
-        #os.chdir(here)        
-        #print('Error: \n Unable to plot. Something is wrong...')
-
-    os.chdir(here)
-    plot_XANES_with_unknown(spectra,mpid,unknown_spectra)
+    try:
+        os.chdir(here)
+        plot_XANES_with_unknown(spectra,mpid,unknown_spectra)
+    except:
+        os.chdir(here)        
+        print('Error: \n Unable to plot. Something is wrong...')
 
 
     return 
@@ -414,6 +518,164 @@ def plot_XANES(sp,mpid=None,export_figure=None):
 
 
 
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def plot_XANES_two_together(spectra1,mpid1,spectra2,mpid2):
+       
+    fig = plt.figure(figsize=(9,12))    
+    gs1 = gridspec.GridSpec(2, 2, width_ratios=[2,2] )
+    gs1.update(top=0.95, bottom=0.1, left=0.07, right=0.97, wspace=0.10, hspace=0.08)
+
+    
+    sp = spectra1
+    ax=fig.add_subplot(gs1[0])         
+    # for labels
+    env0 = sp[0][2]
+    def getKey1(item): return item[1]
+    env0 = sorted(env0, key=getKey1)
+    # get species
+    ss = []
+    for i in env0:
+        ss.append(i[0].specie.name)    
+    labels = list(set(ss))    
+    for i in labels:
+        c = get_c(i)
+        ax.plot(0,0,'o',color=c,label=i,ms=8)  
+    ax.legend(loc='upper left',fontsize=12,ncol=1)    
+        
+    s = 0
+    for i in sp:
+        multip = str(i[0])
+        site_text = env0[0][0].specie.name+'-'+str(s+1)+'\n(x'+multip+')'
+        ax.annotate(site_text,(-2,s), fontsize=8)        
+        env = i[2]
+        env = sorted(env, key=getKey1)    
+        ss = []
+        ds = []
+        for i in env:
+            ss.append(i[0].specie.name)  
+            ds.append(i[1])
+        ds = np.array(ds,np.float)
+            
+        ax.plot(s+ds[0:21],'k-')
+        for i,d in enumerate(ds[0:21]):
+            c = get_c(ss[i])
+            ax.plot( i, s+d, 'o', color=c, ms=9, alpha=0.8 ) 
+        s += 1         
+    
+    ax.set_xticks(list(range(1,21)))
+    ax.set_xlim([-2.5,21])
+    #ax.set_xlabel('Neighbour index #')
+    ax.set_ylabel('Distance to absorbing atom ($\AA$) for '+mpid1)
+    
+    if sp[0][1]:     
+        ax=fig.add_subplot(gs1[1])
+        minmaxs = []
+        yshift=0
+        for s,i in enumerate(sp):
+            multip = str(i[0])
+            xas_text = env0[0][0].specie.name+'-'+str(s+1)+'\n(x'+multip+')'
+            ax.plot(i[1].energy,yshift+i[1].intensity,'-')
+            ax.annotate(xas_text,(i[1].energy[-1],yshift+i[1].intensity[-1]), fontsize=8)
+            yshift = yshift + 0.5
+            minmaxs.append([i[1].energy[0],i[1].energy[-1]])
+        minmaxs = np.array(minmaxs)  
+          
+        e_int = np.linspace(max(minmaxs[:,0]),min(minmaxs[:,1]),300)
+        multips = 0
+        ts = e_int*0
+        for i in sp:
+            multips = multips + i[0]
+            f = InterpolatedUnivariateSpline(i[1].energy,i[1].intensity)
+            i_int = f(e_int)
+            ts = ts + i_int
+        ts = ts/ts[-1]
+        if len(sp) > 1:
+            ax.plot(e_int,yshift+ts,'k-')
+            ax.annotate('total\n',(e_int[-1],yshift+ts[-1]), fontsize=8)
+        
+        ax.set_yticks([])    
+        #ax.set_xlabel('Energy (eV)')
+        ax.set_ylabel('Normalized $\mu$(E)')
+        ax.set_xlim(i[1].energy[0]-2,i[1].energy[-1]+6)  
+        
+        
+    sp = spectra2
+    ax=fig.add_subplot(gs1[2])         
+    # for labels
+    env0 = sp[0][2]
+    def getKey1(item): return item[1]
+    env0 = sorted(env0, key=getKey1)
+    # get species
+    ss = []
+    for i in env0:
+        ss.append(i[0].specie.name)    
+    labels = list(set(ss))    
+    for i in labels:
+        c = get_c(i)
+        ax.plot(0,0,'o',color=c,label=i,ms=8)  
+    ax.legend(loc='upper left',fontsize=12,ncol=1)    
+        
+    s = 0
+    for i in sp:
+        multip = str(i[0])
+        site_text = env0[0][0].specie.name+'-'+str(s+1)+'\n(x'+multip+')'
+        ax.annotate(site_text,(-2,s), fontsize=8)        
+        env = i[2]
+        env = sorted(env, key=getKey1)    
+        ss = []
+        ds = []
+        for i in env:
+            ss.append(i[0].specie.name)  
+            ds.append(i[1])
+        ds = np.array(ds,np.float)
+            
+        ax.plot(s+ds[0:21],'k-')
+        for i,d in enumerate(ds[0:21]):
+            c = get_c(ss[i])
+            ax.plot( i, s+d, 'o', color=c, ms=9, alpha=0.8 ) 
+        s += 1         
+    
+    ax.set_xticks(list(range(1,21)))
+    ax.set_xlim([-2.5,21])
+    ax.set_xlabel('Neighbour index #')
+    ax.set_ylabel('Distance to absorbing atom ($\AA$) for '+mpid2)
+    
+    if sp[0][1]:     
+        ax=fig.add_subplot(gs1[3])
+        minmaxs = []
+        yshift=0
+        for s,i in enumerate(sp):
+            multip = str(i[0])
+            xas_text = env0[0][0].specie.name+'-'+str(s+1)+'\n(x'+multip+')'
+            ax.plot(i[1].energy,yshift+i[1].intensity,'-')
+            ax.annotate(xas_text,(i[1].energy[-1],yshift+i[1].intensity[-1]), fontsize=8)
+            yshift = yshift + 0.5
+            minmaxs.append([i[1].energy[0],i[1].energy[-1]])
+        minmaxs = np.array(minmaxs)  
+          
+        e_int = np.linspace(max(minmaxs[:,0]),min(minmaxs[:,1]),300)
+        multips = 0
+        ts = e_int*0
+        for i in sp:
+            multips = multips + i[0]
+            f = InterpolatedUnivariateSpline(i[1].energy,i[1].intensity)
+            i_int = f(e_int)
+            ts = ts + i_int
+        ts = ts/ts[-1]
+        if len(sp) > 1:
+            ax.plot(e_int,yshift+ts,'k-')
+            ax.annotate('total\n',(e_int[-1],yshift+ts[-1]), fontsize=8)
+        
+        ax.set_yticks([])    
+        ax.set_xlabel('Energy (eV)')
+        ax.set_ylabel('Normalized $\mu$(E)')
+        ax.set_xlim(i[1].energy[0]-2,i[1].energy[-1]+6)  
+
+    
+    return
 
 
 
@@ -540,6 +802,19 @@ def plot_XANES_with_unknown(sp,mpid,unknown_spectra):
     display(y)  
     
     return
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

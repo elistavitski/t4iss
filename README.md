@@ -52,10 +52,31 @@ less than 20 atoms in unit-cell. First 5 structures will be plotted. * is
 also supported. For example, "*-Ti-O" will find 816 structures. But don't
 try to plot them....
 
-compare_my_unknown function can be used to compare an unknown spectra with
-the ones in database. See below:
+
+If you want to compare two structures in the same plot, you can
+use compare_two function. mpid1 and mpid2 are ids of two structures.
+
+```python
+compare_two(mpid1='mvc-11115',mpid2='mvc-4715',absorbing_atom='Ti')
+``` 
+will generate this:
     
-![](img/unknown.png)
+![](img/compare_two.png)
+
+
+Suppose you have an experimental unknown spectrum and you want to 
+compare it with a spectrum in the database. For this task, you can use
+compare_my_unknown function as below. First you should place your unknown
+spectrum into "unknowns" folder as two-column plain text and give it a
+filename like: unknown.txt. You should also provide mpid of reference.
+In the generated plot, you can use x-shift widget for alignment. 
+    
+```python
+compare_my_unknown(fname='unknown.txt',mpid='mvc-11115',absorbing_atom='Ti')
+``` 
+will generate this:
+    
+![](img/compare_my_unknown.png)
 
 
 TODOs:
