@@ -11,7 +11,6 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='t4iss',
-    cmdclass=versioneer.get_cmdclass(),
     license="BSD (3-clause)",
     url="https://github.com/MehmetTopsakal/t4iss",
     packages=setuptools.find_packages(),
