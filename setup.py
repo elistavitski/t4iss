@@ -1,5 +1,4 @@
 from __future__ import (absolute_import, division, print_function)
-import versioneer
 
 import setuptools
 
@@ -12,7 +11,6 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='t4iss',
-    version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     license="BSD (3-clause)",
     url="https://github.com/MehmetTopsakal/t4iss",
