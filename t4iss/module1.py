@@ -2,6 +2,7 @@
   
 import numpy as np
 import os,sys,shutil,subprocess,pickle,json
+import os 
 from os.path import join
 
 from pymatgen.core.periodic_table import Element
@@ -26,7 +27,9 @@ from .PT import get_c
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def get_XANES(mpr,mpid,absorbing_atom,run_feff=None,dbroot=None,plot=None,n_cpu=None,export_figure=None):
     
-    here = os.getcwd()
+    #here = os.getcwd()
+    # this is the package current directory
+    here = os.path.dirname(os.path.realpath(__file__)) + "/.."
     
     if dbroot is None:
         dbroot = join(here,'data','XANES')
