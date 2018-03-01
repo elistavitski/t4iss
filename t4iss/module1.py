@@ -120,15 +120,18 @@ def get_XANES(mpr,mpid,absorbing_atom,run_feff=None,dbroot=None,plot=None,n_cpu=
                                 pickle.dump(xanes, open('xanes.pkl', 'wb'))
                                 #out = np.column_stack( (x,y) )
                                 #np.savetxt('xanes.dat', out, fmt="%10.3f %6.4e") 
+                        os.chdir('..')
                     elif os.path.isfile('xmu.dat'):
                         x, y = np.loadtxt('xmu.dat', unpack=True, comments='#', usecols=(0,3), skiprows=0)
                         xanes = XANES(x, y, structure, Element(absorbing_atom), 'K')
                         pickle.dump(xanes, open('xanes.pkl', 'wb'))
+                        os.chdir('..')
                         #out = np.column_stack( (x,y) )
                         #np.savetxt('xanes.dat', out, fmt="%10.3f %6.4e")
                     elif run_feff:
                         write_feffinp('../CONTCAR',cai=indices[i][0],dmax=rFMS+2,rFMS=rFMS,rSCF=rSCF,corehole=corehole)
                         feff_todos.append(os.getcwd())
+                        os.chdir('..')
                 else:
                     os.chdir('..')
             else:
