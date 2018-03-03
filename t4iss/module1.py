@@ -213,8 +213,9 @@ def get_XANES(mpr,mpid,absorbing_atom,run_feff=None,dbroot=None,plot=None,n_cpu=
         try:
             os.chdir(here)
             plot_XANES(spectra,mpid,export_figure)
-        except:
+        except Exception as exc:
             print('Error: \n Unable to plot. Something is wrong...')
+            print(exc)
             os.chdir(here)
             return
 
@@ -323,9 +324,10 @@ def compare_two(mpid1,mpid2,absorbing_atom,dbroot=None):
     try:
         os.chdir(here)
         plot_XANES_two_together(spectra1,mpid1,spectra2,mpid2)
-    except:
+    except Exception as exc:
         os.chdir(here)
         print('Error: \n Unable to plot. Something is wrong...')
+        print(exc)
 
     return
 
@@ -414,9 +416,10 @@ def compare_my_unknown(fname,mpid,absorbing_atom,data_dir=None,dbroot=None,xsran
         if ysrange is None:
             ysrange=[-2.0,2.0]
         plot_XANES_with_unknown(spectra,mpid,unknown_spectra,xsrange,ysrange)
-    except:
+    except Exception as exc:
         os.chdir(here)
         print('Error: \n Unable to plot. Something is wrong...')
+        print(exc)
     #os.chdir(here)
     #plot_XANES_with_unknown(spectra,mpid,unknown_spectra,xsrange,ysrange)
     return
@@ -519,7 +522,7 @@ def plot_XANES(sp,mpid=None,export_figure=None):
 
         if export_figure:
             if not os.path.isdir('plots'):
-                os.makedir('plots')
+                os.makedirs('plots')
                 os.chdir('plots')
             else:
                 os.chdir('plots')
