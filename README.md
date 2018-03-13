@@ -87,7 +87,8 @@ TODOs:
 
 
 ## module-2
-will be for implementing MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com)
+This module implements MCR-ALS [https://mcrals.wordpress.com](https://mcrals.wordpress.com). 
+Find module-2.ipynb in examples folder.
 
 ![](img/MCR-ALS_LTO.png)
 
