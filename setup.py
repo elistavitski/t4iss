@@ -14,8 +14,9 @@ setuptools.setup(
     license="BSD (3-clause)",
     url="https://github.com/MehmetTopsakal/t4iss",
     packages=setuptools.find_packages(),
-    package_data={'t4iss': ['data/*']},
-    #install_requires=['netcdf4','pyparsing', 'pysmbc', 'pytable'], #needs zbarlight
+    
+    package_data={'t4iss': ['../examples/*.ipynb','mcr/matlab_version/*','mcr/octave_version/*','scripts/*']},
+
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3.4",

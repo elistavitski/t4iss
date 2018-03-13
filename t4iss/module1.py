@@ -21,7 +21,7 @@ from matplotlib import pyplot as plt
 from .feff_tools import write_feffinp
 from .PT import get_c
 
-from . import global_cache
+from . import t4iss_defaults
 
 
 
@@ -34,7 +34,7 @@ def get_XANES(mpr,mpid,absorbing_atom,run_feff=None,dbroot=None,plot=None,n_cpu=
     #here = os.path.dirname(os.path.realpath(__file__)) + "/.."
 
     if dbroot is None:
-        dbroot = global_cache['dbroot']
+        dbroot = t4iss_defaults['t4iss_data']
     if not os.path.isdir(dbroot):
         os.mkdir(dbroot)
 
@@ -240,7 +240,7 @@ def compare_two(mpid1,mpid2,absorbing_atom,dbroot=None):
     here = os.getcwd()
 
     if dbroot is None:
-        dbroot = global_cache['dbroot']
+        dbroot = t4iss_defaults['t4iss_data']
     if not os.path.isdir(dbroot):
         os.mkdir(dbroot)
 
@@ -359,7 +359,7 @@ def compare_my_unknown(fname,mpid,absorbing_atom,data_dir=None,dbroot=None,xsran
         return
 
     if dbroot is None:
-        dbroot = global_cache['dbroot']
+        dbroot = t4iss_defaults['t4iss_data']
 
     if not os.path.isdir(dbroot):
         os.mkdir(dbroot)
