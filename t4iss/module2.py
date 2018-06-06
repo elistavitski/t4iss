@@ -88,7 +88,7 @@ def do_EFA(datafile,ncomp,plot=True):
     else:
         print('MATLAB or OCTAVE path is not defined. Exitting....')
         return
-    
+    print(sp_call_str)
     # check datafile
     msg = 'Error: \n datafile does not exist. Please check it !! '
     try:
