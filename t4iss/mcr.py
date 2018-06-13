@@ -11,91 +11,15 @@ from matplotlib import pyplot as plt
 
 import scipy.io as sio
 
-from . import t4iss_defaults
 
 
 
-mcr_path = t4iss_defaults['mcr_path']
-
-
-
-def setup_engine(self):
-    here = os.path.dirname(os.path.realpath(__file__))
-    user_home = os.path.expanduser('~')
-
-    # defaults
-    t4iss_defaults = dict()
-    t4iss_defaults['t4iss_data'] = os.path.join(user_home, '/Documents/Work/databases/MP')
-    t4iss_defaults['t4iss_scratch'] = os.path.join(user_home, '.t4iss', 'scratch')
-    t4iss_defaults['mcr_path'] = os.path.join(here, 'mcr')
-    t4iss_defaults['scripts_path'] = os.path.join(here, 'scripts')
-    t4iss_defaults['octave_path'] = shutil.which('octave')
-    t4iss_defaults['matlab_path'] = shutil.which('matlab')
-
-    print("\nImported t4iss with defaults:\n")
-
-
-    if (t4iss_defaults['matlab_path'] is not None) and (t4iss_defaults['octave_path'] is not None):
-        print('Error: MATLAB/OCTAVE is  cannot be found...')
-
-    #         print('You can set MATLAB by: t4iss.set_defaults(\'matlab_path\',\'/path/to/matlab/executable\') ')
-    #         print('or')
-    #         print('You can set OCTAVE by: t4iss.set_defaults(\'octave_path\',\'/path/to/octave/executable\') ')
-    # except Exception as exc:
-    #     print('\n\nError: \n Either MATLAB or OCTAVE is needed to run module-2. But not found...\n')
-    #     print('You can set MATLAB by: t4iss.set_defaults(\'matlab_path\',\'/path/to/matlab/executable\') ')
-    #     print('or')
-    #     print('You can set OCTAVE by: t4iss.set_defaults(\'octave_path\',\'/path/to/octave/executable\') ')
-    #     print(exc)
-
-
-
-
-
-def plot_spectra(datafile,ds=None):
-
-    # cleanup
-    if os.path.isfile('efa.mat'): os.remove('efa.mat')
-    if os.path.isfile('efa.out'): os.remove('efa.out')
-    if os.path.isfile('als.mat'): os.remove('als.mat')
-    if os.path.isfile('als.out'): os.remove('als.out')
-
-    fig = plt.figure(figsize=(9, 6))
-    gs1 = gridspec.GridSpec(1,2, height_ratios = [1], width_ratios = [1.3,1] )
-    gs1.update(top=0.97, bottom=0.10, left=0.05, right=0.97, wspace=0.15)
-
-    spectra = np.loadtxt(datafile, unpack=True, comments='#', skiprows=0)
-    E = spectra[0,:]; Is = spectra[1:-1,:]
-
-    ax1 = fig.add_subplot(gs1[0]); ax2 = fig.add_subplot(gs1[1])
-
-    # ds is for shifting in y-direction for first subplot
-    if ds is None:
-        ds = 1/len(Is)
-
-    s = 0
-    for i in range(len(Is)):
-        ax1.plot(E,s+Is[i], '-', lw=1)
-        ax2.plot(E,Is[i], '-', lw=1 )
-        s -= ds
-    ax1.set_xlabel('Energy [eV]')
-    ax2.set_xlabel('Energy [eV]')
-    ax1.set_yticks([])
-
-    ax1.grid(True)
-    ax2.grid(True)
-
-    return
-
-
-
-
-def do_EFA(datafile,ncomp,plot=True):
+def run_EFA(datafile,ncomp,defaults,plot=True):
     
-    if t4iss_defaults['octave_path']:
-        sp_call_str = ' export OCTAVE_PATH='+mcr_path+'/octave_version/:$OCTAVE_PATH; octave -qW --eval '+' "efa_t4iss(\''+datafile+'\', '+str(ncomp)+')" > efa.out  '
-    elif t4iss_defaults['matlab_path']:
-        sp_call_str = 'export MATLABPATH='+mcr_path+'/matlab_version/:$MATLABPATH; matlab -nodesktop  -nosplash -r '+' "efa_t4iss(\''+datafile+'\', '+str(ncomp)+')" > efa.out  '
+    if defaults['octave_path']:
+        sp_call_str = ' export OCTAVE_PATH='+defaults['mcr_path'] +'/octave_version/:$OCTAVE_PATH; octave -qW --eval '+' "efa_t4iss(\''+datafile+'\', '+str(ncomp)+')" > efa.out  '
+    elif defaults['matlab_path']:
+        sp_call_str = 'export MATLABPATH=' + defaults['mcr_path']+'/matlab_version/:$MATLABPATH; matlab -nodesktop  -nosplash -r '+' "efa_t4iss(\''+datafile+'\', '+str(ncomp)+')" > efa.out  '
     else:
         print('MATLAB or OCTAVE path is not defined. Exitting....')
         return
